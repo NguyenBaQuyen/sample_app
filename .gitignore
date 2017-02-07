@@ -18,5 +18,6 @@
 !/tmp/.keep
 /.idea
 /.idea/.generators
+
 # Ignore Byebug command history file.
 .byebug_history
