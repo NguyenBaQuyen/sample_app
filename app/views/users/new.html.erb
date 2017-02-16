@@ -15,6 +15,10 @@
       <br>
       <%= f.label :password_confirmation, "Confirmation" %><br>
       <%= f.password_field :password_confirmation, class: "form-control" %>
+      <%= f.label :Gender %>
+      <br>
+      <%= f.select :gender, options_for_select(@gender) %>
+      <br>
       <br>
       <%= f.submit "Create my account", class: "btn btn-primary" %>
     <% end %>
