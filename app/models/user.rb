@@ -5,7 +5,7 @@ class User < ApplicationRecord
   validates :name, presence: true, length: {maximum: 50}
   validates :email, presence: true, length: {maximum: 255},
     format: {with: /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i}, uniqueness: true
-  validates :password, presence: true, length: {maximum: 6}
+  validates :password, presence: true, length: {maximum: 6}, allow_nil: true
   validates :gender, presence: true
   has_secure_password
 
@@ -27,6 +27,10 @@ class User < ApplicationRecord
     BCrypt::Password.new(remember_digest).is_password? remember_token
   end
 
+  def current_user? user
+    self == user
+  end
+
   private
   def downcase_email
     self.email = email.downcase
@@ -37,4 +41,5 @@ class User < ApplicationRecord
       BCrypt::Engine.cost
     BCrypt::Password.create string, cost: cost
   end
+
 end
