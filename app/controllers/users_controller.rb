@@ -1,8 +1,7 @@
 class UsersController < ApplicationController
   before_action :logged_in_user, only: [:index, :edit, :update, :destroy]
-  before_action :correct_user, only: [:edit, :update]
-  before_action :admin_user, only: :destroy
-  before_action :find_user
+  before_action :correct_user
+  before_action :verify_admin_user, only: :destroy
   before_action :find_gender, only: [:edit, :new]
 
   def index
@@ -10,10 +9,7 @@ class UsersController < ApplicationController
   end
 
   def show
-    unless @user
-      flash[:fail] = "Unknown user"
-      redirect_to root_path
-    end
+    @microposts = @user.microposts.paginate page: params[:page]
   end
 
   def new
@@ -50,8 +46,6 @@ class UsersController < ApplicationController
     redirect_to users_url
   end
 
-
-
   private
   def user_params
     params.require(:user).permit :name, :email, :password,
@@ -67,16 +61,11 @@ class UsersController < ApplicationController
   end
 
   def correct_user
-    @user = find_user
-    redirect_to root_url unless current_user.current_user? @user
-  end
-
-  def admin_user
-    redirect_to root_url unless current_user.admin?
-  end
-
-  def find_user
     @user = User.find_by id: params[:id]
+  end
+
+  def verify_admin_user
+    redirect_to root_url unless current_user.admin?
   end
 
   def find_gender
