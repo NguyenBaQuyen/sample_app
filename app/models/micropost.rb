@@ -1,6 +1,10 @@
 class Micropost < ApplicationRecord
   belongs_to :user
-  scope :created_at, -> {order created_at: :desc}
+  scope :order_by_created_at, -> {order created_at: :desc}
+  scope :following, ->id {where("user_id IN (SELECT followed_id FROM
+    relationships WHERE  follower_id = :user_id) OR user_id = :user_id",
+    user_id: id)
+  }
   mount_uploader :picture, ::PictureUploader
   validates :user_id, presence: true
   validates :content, presence: true, length: {maximum: 140}
